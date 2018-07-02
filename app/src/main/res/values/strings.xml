@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">LikeItGithub</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="titleSearch">Github</string>
+    <string name="titleLike">Like</string>
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="download">Downloading...</string>
+    <string name="exit">Press the Back button one more time to exit.</string>
+    <string name="no_search">Retry</string>
+    <string name="network_is_not_working">Network problem</string>
+</resources>
