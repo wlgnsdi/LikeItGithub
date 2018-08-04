@@ -1,4 +1,4 @@
-package com.ryu.dev.likeitgithub.adapter;
+package com.ryu.dev.likeitgithub.common;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 import com.ryu.dev.likeitgithub.R;
-import com.ryu.dev.likeitgithub.view.GithubSearchFragment;
-import com.ryu.dev.likeitgithub.view.LikeFragment;
+import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
+import com.ryu.dev.likeitgithub.view.like.LikeFragment;
 import java.util.HashMap;
 import java.util.Map;
 

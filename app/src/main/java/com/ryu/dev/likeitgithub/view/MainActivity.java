@@ -1,8 +1,9 @@
 package com.ryu.dev.likeitgithub.view;
 
-import static com.ryu.dev.likeitgithub.view.GithubSearchFragment.githubList;
+import static com.ryu.dev.likeitgithub.view.search.GithubSearchFragment.githubList;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,7 +21,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
-import com.ryu.dev.likeitgithub.adapter.PagePagerAdapter;
+import com.ryu.dev.likeitgithub.common.PagePagerAdapter;
+import com.ryu.dev.likeitgithub.db.DatabaseHelper;
+import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,11 +42,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public static int NUM_PAGE = 0;
 
+    public static DatabaseHelper sDatabaseHelper;
+    public static SQLiteDatabase sDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        sDatabaseHelper = new DatabaseHelper(this);
 
         pagerAdapter = new PagePagerAdapter(this, getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);

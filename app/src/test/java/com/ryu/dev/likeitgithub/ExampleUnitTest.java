@@ -1,6 +1,6 @@
 package com.ryu.dev.likeitgithub;
 
-import com.ryu.dev.likeitgithub.view.GithubSearchFragment;
+import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
 import org.junit.Test;
 
 /**

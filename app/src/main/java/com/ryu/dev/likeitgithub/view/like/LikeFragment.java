@@ -1,4 +1,4 @@
-package com.ryu.dev.likeitgithub.view;
+package com.ryu.dev.likeitgithub.view.like;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
-import com.ryu.dev.likeitgithub.adapter.RecyclerViewAdapter;
+import com.ryu.dev.likeitgithub.view.like.adapter.Adapter;
+import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
 
 public class LikeFragment extends Fragment {
 
@@ -22,7 +23,7 @@ public class LikeFragment extends Fragment {
     @BindView(R.id.recyclerview_like)
     RecyclerView recyclerView;
 
-    private RecyclerViewAdapter adapter;
+    private Adapter adapter;
 
     public static LikeFragment newInstance() {
         if (mLikeFragment == null) {
@@ -50,9 +51,10 @@ public class LikeFragment extends Fragment {
         super.onResume();
 
         if (GithubSearchFragment.githubList.size() > 0) {
-            adapter = new RecyclerViewAdapter(
-                    getActivity(), GithubSearchFragment.githubList, LIKE_LIST_FRAGMENT);
+            adapter = new Adapter(getActivity(), GithubSearchFragment.githubList);
+
             recyclerView.setAdapter(adapter);
         }
     }
+
 }

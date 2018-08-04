@@ -14,50 +14,61 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
 import com.ryu.dev.likeitgithub.model.Github.Items;
-import com.ryu.dev.likeitgithub.view.GithubSearchFragment;
-import com.ryu.dev.likeitgithub.view.LikeFragment;
+import com.ryu.dev.likeitgithub.view.like.LikeFragment;
+import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class _RecyclerViewAdapter extends RecyclerView.Adapter<_RecyclerViewAdapter.ViewHolder> {
 
-    private List<Items> githubList;
-    private Context context;
-    private String fragmentDes;
+    private List<Items> mGithubList;
+    private Context mContext;
+    private String mFragmentDes;
+    private AdapterInterface mInterface;
 
-    public RecyclerViewAdapter(Context context, List<Items> githubList, String fragmentDes) {
-        this.context = context;
+//    String[] projection = {
+//            GithubTable.COLUMN_ID,
+//            GithubTable.COLUMN_LOGIN,
+//            GithubTable.COLUMN_AVATAR_URL,
+//            GithubTable.COLUMN_LIKE
+//    };
+
+    public _RecyclerViewAdapter(Context context, List<Items> githubList, String fragmentDes, AdapterInterface adapterInterface) {
+        mContext = context;
+
         if (fragmentDes.equals(LikeFragment.LIKE_LIST_FRAGMENT)) {
-            this.githubList = new ArrayList<>();
+            mGithubList = new ArrayList<>();
 
             for (Items item : githubList) {
                 if (item.getLike()) {
-                    this.githubList.add(item);
+                    mGithubList.add(item);
                 }
             }
         } else {
-            this.githubList = githubList;
+            mGithubList = githubList;
         }
-        this.fragmentDes = fragmentDes;
+
+        mFragmentDes = fragmentDes;
+        mInterface = adapterInterface;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View view = layoutInflater.inflate(R.layout.list_item, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindLayout(githubList.get(position));
+        holder.bindLayout(mGithubList.get(position));
     }
-
 
     @Override
     public int getItemCount() {
-        return githubList.size();
+        return mGithubList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -81,22 +92,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         public void bindLayout(final Items item) {
-            Picasso.with(context).load(item.getAvatar_url()).into(img);
+            Picasso.with(mContext).load(item.getAvatarUrl()).into(img);
             tvLogin.setText(item.getLogin());
             makeDrawable(R.drawable.thumb_up_like);
             changeLike();
         }
 
         public void changeLike() {
-            if (githubList.get(getAdapterPosition()).getLike()) {
+//            sDb = sDatabaseHelper.getWritableDatabase();
+
+            Items item = mGithubList.get(getAdapterPosition());
+
+//            ContentValues values = new ContentValues();
+//            values.put(GithubTable.COLUMN_LOGIN, item.getLogin());
+//            values.put(GithubTable.COLUMN_AVATAR_URL, item.getAvatarUrl());
+//            values.put(GithubTable.COLUMN_LIKE, item.getLike());
+
+            if (mGithubList.get(getAdapterPosition()).getLike()) {
+//                sDb.insert(GithubTable.TABLE_NAME, null, values);
                 makeDrawable(R.drawable.thumb_up_like);
             } else {
+//                String selection = GithubTable.COLUMN_LOGIN + " LIKE ?";
+//                String[] selectionArgs = {item.getLogin()};
+//                sDb.delete(GithubTable.COLUMN_LOGIN, selection, selectionArgs);
                 makeDrawable(R.drawable.thumb_up_unlike);
             }
         }
 
         private void makeDrawable(int drawableValue) {
-            drawable = ContextCompat.getDrawable(context, drawableValue);
+            drawable = ContextCompat.getDrawable(mContext, drawableValue);
             drawable.setBounds(0, 0, 40, 40);
             tvLike.setCompoundDrawables(null, null, drawable, null);
         }
@@ -107,15 +131,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 return;
             }
 
-            if (fragmentDes.equals(LikeFragment.LIKE_LIST_FRAGMENT)
-                    && githubList.get(getAdapterPosition()).getLike()) {
-                githubList.get(getAdapterPosition()).setLike(false);
+            if (mFragmentDes.equals(LikeFragment.LIKE_LIST_FRAGMENT) && mGithubList.get(getAdapterPosition()).getLike()) {
+                mGithubList.get(getAdapterPosition()).setLike(false);
+
                 changeLike();
-                githubList.remove(githubList.get(getAdapterPosition()));
+                mGithubList.remove(mGithubList.get(getAdapterPosition()));
                 pushToast(R.string.unlike);
-            } else if (fragmentDes.equals(GithubSearchFragment.SEARCH_FRAGMENT)
-                    && !githubList.get(getAdapterPosition()).getLike()) {
-                githubList.get(getAdapterPosition()).setLike(true);
+            } else if (mFragmentDes.equals(GithubSearchFragment.SEARCH_FRAGMENT) && !mGithubList.get(getAdapterPosition()).getLike()) {
+                mGithubList.get(getAdapterPosition()).setLike(true);
+
                 changeLike();
                 pushToast(R.string.like);
             }
@@ -127,8 +151,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (toast != null) {
                 toast.cancel();
             }
-            toast = Toast.makeText(context, id, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(mContext, id, Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    public interface AdapterInterface {
+        void adapterOnClick();
     }
 }

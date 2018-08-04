@@ -1,6 +1,6 @@
 package com.ryu.dev.likeitgithub.network;
 
-import static com.ryu.dev.likeitgithub.view.GithubSearchFragment.githubList;
+import static com.ryu.dev.likeitgithub.view.search.GithubSearchFragment.githubList;
 
 import com.ryu.dev.likeitgithub.model.Github;
 import com.ryu.dev.likeitgithub.model.Github.Items;

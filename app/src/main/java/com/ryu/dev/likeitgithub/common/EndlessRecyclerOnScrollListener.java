@@ -1,4 +1,4 @@
-package com.ryu.dev.likeitgithub.adapter;
+package com.ryu.dev.likeitgithub.common;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +35,6 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             onLoadMore();
             mLoading = true;
         }
-        System.out.println(">>> mLoading : " + mLoading);
     }
 
     public abstract void onLoadMore();

@@ -1,6 +1,8 @@
 package com.ryu.dev.likeitgithub.model;
 
+import android.content.ContentValues;
 import com.google.gson.annotations.SerializedName;
+import com.ryu.dev.likeitgithub.db.GithubTable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,29 +16,13 @@ public class Github {
     }
 
     public class Items {
+
         @SerializedName("login")
         String login;
-        @SerializedName("name")
-        String name;
-        @SerializedName("id")
-        int id;
         @SerializedName("avatar_url")
         String avatar_url;
-        @SerializedName("html_url")
-        String html_url;
-        @SerializedName("type")
-        String type;
-        @SerializedName("score")
-        float score;
         boolean like;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
         public boolean getLike() {
             return like;
         }
@@ -49,32 +35,24 @@ public class Github {
             return login;
         }
 
-        public int getId() {
-            return id;
+        public void setLogin(String login) {
+            this.login = login;
         }
 
-        public String getAvatar_url() {
+        public String getAvatarUrl() {
             return avatar_url;
         }
 
-        public String getHtml_url() {
-            return html_url;
+        public void setAvatalUrl(String url) {
+            this.avatar_url = url;
         }
+    }
 
-        public String getType() {
-            return type;
-        }
-
-        public float getScore() {
-            return score;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
+    private static ContentValues getContentValues(Items items) {
+        ContentValues values = new ContentValues();
+        values.put(GithubTable.COLUMN_LOGIN, items.login);
+        values.put(GithubTable.COLUMN_AVATAR_URL, items.avatar_url);
+        values.put(GithubTable.COLUMN_LIKE, items.like);
+        return values;
     }
 }

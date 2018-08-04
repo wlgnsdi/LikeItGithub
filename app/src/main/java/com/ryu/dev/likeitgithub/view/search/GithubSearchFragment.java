@@ -1,4 +1,4 @@
-package com.ryu.dev.likeitgithub.view;
+package com.ryu.dev.likeitgithub.view.search;
 
 import static com.ryu.dev.likeitgithub.view.MainActivity.NUM_PAGE;
 
@@ -17,13 +17,14 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
-import com.ryu.dev.likeitgithub.adapter.EndlessRecyclerOnScrollListener;
-import com.ryu.dev.likeitgithub.adapter.RecyclerViewAdapter;
+import com.ryu.dev.likeitgithub.common.EndlessRecyclerOnScrollListener;
 import com.ryu.dev.likeitgithub.model.Github;
 import com.ryu.dev.likeitgithub.model.Github.Items;
 import com.ryu.dev.likeitgithub.network.NetworkCall;
 import com.ryu.dev.likeitgithub.network.NetworkCall.NetworkInterface;
 import com.ryu.dev.likeitgithub.network.RetrofitService;
+import com.ryu.dev.likeitgithub.view.MainActivity;
+import com.ryu.dev.likeitgithub.view.search.adapter.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -37,7 +38,7 @@ public class GithubSearchFragment extends Fragment {
     @BindView(R.id.recyclerview_find)
     RecyclerView recyclerView;
 
-    private RecyclerViewAdapter adapter;
+    private Adapter adapter;
 
     public static List<Items> githubList = new ArrayList<>();
     private String searchStr;
@@ -98,7 +99,7 @@ public class GithubSearchFragment extends Fragment {
             public void resultNetwork() {
                 if (NUM_PAGE == 1) {
                     Log.d(TAG, "resultNetwork : " + githubList.size());
-                    adapter = new RecyclerViewAdapter(getActivity(), githubList, SEARCH_FRAGMENT);
+                    adapter = new Adapter(getActivity(), githubList);
                     recyclerView.setAdapter(adapter);
                     initListener();
                     ((MainActivity) getActivity()).resumeFragment();
@@ -117,6 +118,4 @@ public class GithubSearchFragment extends Fragment {
 
         networkCall.proceed();
     }
-
-
 }
