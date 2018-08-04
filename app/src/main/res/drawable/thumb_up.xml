@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/thumb_up_like" android:state_selected="true">
+        <shape><size android:width="10dp" android:height="10dp"/></shape>
+    </item>
+    <item android:drawable="@drawable/thumb_up_unlike" android:state_selected="false">
+        <shape><size android:width="10dp" android:height="10dp"/></shape>
+    </item>
+</selector>

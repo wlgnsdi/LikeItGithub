@@ -1,9 +1,8 @@
 package com.ryu.dev.likeitgithub.view.search.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     private List<Items> mGithubList;
     private Context mContext;
+    private SearchInterface mInterface;
 
-    public Adapter(Context context, List<Items> githubList) {
+    public Adapter(Context context, List<Items> githubList, SearchInterface interfaces) {
         mContext = context;
         mGithubList = githubList;
+        mInterface = interfaces;
     }
 
     @Override
@@ -51,53 +52,49 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         @BindView(R.id.github_login)
         TextView tvLogin;
         @BindView(R.id.github_like)
-        TextView tvLike;
-
-        private Drawable drawable;
+        ImageView imgLike;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(this);
-            tvLike.setOnClickListener(this);
+            imgLike.setOnClickListener(this);
         }
 
         public void bindLayout(final Items item) {
             Picasso.with(mContext).load(item.getAvatarUrl()).into(img);
             tvLogin.setText(item.getLogin());
-            makeDrawable(R.drawable.thumb_up_like);
-            changeLike();
+            if (item.getLike()) {
+                imgLike.setSelected(true);
+            }
+            else {
+                imgLike.setSelected(false);
+            }
         }
 
         public void changeLike() {
             if (mGithubList.get(getAdapterPosition()).getLike()) {
-                makeDrawable(R.drawable.thumb_up_like);
+                img.setSelected(true);
             } else {
-                makeDrawable(R.drawable.thumb_up_unlike);
+                img.setSelected(false);
             }
-        }
 
-        private void makeDrawable(int drawableValue) {
-            drawable = ContextCompat.getDrawable(mContext, drawableValue);
-            drawable.setBounds(0, 0, 40, 40);
-            tvLike.setCompoundDrawables(null, null, drawable, null);
+            notifyDataSetChanged();
         }
 
         @Override
         public void onClick(View v) {
-            if (getAdapterPosition() < 0) {
-                return;
-            }
+            boolean isLike = !mGithubList.get(getAdapterPosition()).getLike();
 
-            if (mGithubList.get(getAdapterPosition()).getLike()) {
-                mGithubList.get(getAdapterPosition()).setLike(false);
-            } else {
-                mGithubList.get(getAdapterPosition()).setLike(true);
-            }
-
+            mGithubList.get(getAdapterPosition()).setLike(isLike);
+            Log.d(">>>>", "Position : " + getAdapterPosition() + ", " + isLike);
+            mInterface.onClick(isLike, mGithubList.get(getAdapterPosition()));
             changeLike();
-//            notifyDataSetChanged();
         }
+    }
+
+    public interface SearchInterface {
+        public void onClick(boolean isLike, Items items);
     }
 }

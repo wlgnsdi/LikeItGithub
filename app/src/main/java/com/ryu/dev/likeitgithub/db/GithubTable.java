@@ -17,4 +17,11 @@ public class GithubTable {
                 COLUMN_LIKE
         };
     }
+
+        String[] projection = {
+            GithubTable.COLUMN_ID,
+            GithubTable.COLUMN_LOGIN,
+            GithubTable.COLUMN_AVATAR_URL,
+            GithubTable.COLUMN_LIKE
+    };
 }

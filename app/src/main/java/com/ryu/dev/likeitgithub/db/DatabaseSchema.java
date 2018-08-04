@@ -8,4 +8,5 @@ public class DatabaseSchema {
                     GithubTable.COLUMN_LOGIN      + " TEXT, " +
                     GithubTable.COLUMN_AVATAR_URL + " TEXT, " +
                     GithubTable.COLUMN_LIKE   + " INTEGER);";
+
 }

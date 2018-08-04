@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
 import com.ryu.dev.likeitgithub.common.EndlessRecyclerOnScrollListener;
+import com.ryu.dev.likeitgithub.db.DatabaseHelper;
 import com.ryu.dev.likeitgithub.model.Github;
 import com.ryu.dev.likeitgithub.model.Github.Items;
 import com.ryu.dev.likeitgithub.network.NetworkCall;
@@ -25,13 +26,13 @@ import com.ryu.dev.likeitgithub.network.NetworkCall.NetworkInterface;
 import com.ryu.dev.likeitgithub.network.RetrofitService;
 import com.ryu.dev.likeitgithub.view.MainActivity;
 import com.ryu.dev.likeitgithub.view.search.adapter.Adapter;
+import com.ryu.dev.likeitgithub.view.search.adapter.Adapter.SearchInterface;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
 
-public class GithubSearchFragment extends Fragment {
+public class GithubSearchFragment extends Fragment implements SearchInterface{
 
-    public static final String SEARCH_FRAGMENT = "SEARCH_FRAGMENT";
     private static final String TAG = GithubSearchFragment.class.getSimpleName();
     public static GithubSearchFragment searchFragment;
 
@@ -44,6 +45,7 @@ public class GithubSearchFragment extends Fragment {
     private String searchStr;
     private EndlessRecyclerOnScrollListener scrollListener;
     private LinearLayoutManager linearLayoutManager;
+    private DatabaseHelper mHelper;
 
     public static GithubSearchFragment newInstance() {
         if (searchFragment == null) {
@@ -59,6 +61,9 @@ public class GithubSearchFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_github_search, container, false);
         ButterKnife.bind(this, view);
+
+        // Database
+        mHelper = DatabaseHelper.getInstance(getActivity());
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -99,7 +104,7 @@ public class GithubSearchFragment extends Fragment {
             public void resultNetwork() {
                 if (NUM_PAGE == 1) {
                     Log.d(TAG, "resultNetwork : " + githubList.size());
-                    adapter = new Adapter(getActivity(), githubList);
+                    adapter = new Adapter(getActivity(), githubList, GithubSearchFragment.this);
                     recyclerView.setAdapter(adapter);
                     initListener();
                     ((MainActivity) getActivity()).resumeFragment();
@@ -117,5 +122,14 @@ public class GithubSearchFragment extends Fragment {
         });
 
         networkCall.proceed();
+    }
+
+    @Override
+    public void onClick(boolean isLike, Items items) {
+        if (isLike) {
+            Log.d(TAG, "onClick >> items : " + items.getLike());
+            mHelper.add(items);
+        }
+        else mHelper.delete(items);
     }
 }

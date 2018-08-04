@@ -13,17 +13,19 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
+import com.ryu.dev.likeitgithub.db.DatabaseHelper;
+import com.ryu.dev.likeitgithub.model.Github.Items;
 import com.ryu.dev.likeitgithub.view.like.adapter.Adapter;
-import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
+import com.ryu.dev.likeitgithub.view.like.adapter.Adapter.LikeInterface;
 
-public class LikeFragment extends Fragment {
+public class LikeFragment extends Fragment implements LikeInterface {
 
-    public static final String LIKE_LIST_FRAGMENT = "LIKE_LIST_FRAGMENT";
     public static LikeFragment mLikeFragment;
     @BindView(R.id.recyclerview_like)
     RecyclerView recyclerView;
 
     private Adapter adapter;
+    private DatabaseHelper mHelper;
 
     public static LikeFragment newInstance() {
         if (mLikeFragment == null) {
@@ -40,6 +42,9 @@ public class LikeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_like, container, false);
         ButterKnife.bind(this, view);
 
+        // Database
+        mHelper = DatabaseHelper.getInstance(getActivity());
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL));
@@ -50,11 +55,15 @@ public class LikeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (GithubSearchFragment.githubList.size() > 0) {
-            adapter = new Adapter(getActivity(), GithubSearchFragment.githubList);
+        if (mHelper.getAll().size() > 0) {
+            adapter = new Adapter(getActivity(), mHelper.getAll(), this);
 
             recyclerView.setAdapter(adapter);
         }
     }
 
+    @Override
+    public void onClick(Items item) {
+        mHelper.delete(item);
+    }
 }

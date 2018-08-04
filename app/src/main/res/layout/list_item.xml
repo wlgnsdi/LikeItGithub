@@ -28,16 +28,12 @@
                 android:textSize="15sp"
                 tools:text="Toomy" />
 
-        <TextView
+        <ImageView
                 android:id="@+id/github_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/colorTransparent"
-                android:drawablePadding="5dp"
-                android:text="@string/like"
-                android:textSize="15sp" />
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/thumb_up"/>
     </RelativeLayout>
 </RelativeLayout>

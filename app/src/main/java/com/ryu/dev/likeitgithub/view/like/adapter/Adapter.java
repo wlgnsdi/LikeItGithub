@@ -1,15 +1,12 @@
 package com.ryu.dev.likeitgithub.view.like.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
@@ -20,12 +17,15 @@ import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
+    private static final String TAG = Adapter.class.getSimpleName();
     private List<Items> mGithubList;
     private Context mContext;
+    private LikeInterface mInterface;
 
-    public Adapter(Context context, List<Items> githubList) {
+    public Adapter(Context context, List<Items> githubList, LikeInterface likeInterface) {
         mContext = context;
         mGithubList = new ArrayList<>();
+        mInterface = likeInterface;
 
         for (Items item : githubList) {
             if (item.getLike()) {
@@ -59,39 +59,34 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         @BindView(R.id.github_login)
         TextView tvLogin;
         @BindView(R.id.github_like)
-        TextView tvLike;
-
-        private Toast toast;
-        private Drawable drawable;
+        ImageView imgLike;
 
         ViewHolder(View itemView) {
             super(itemView);
+
             ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(this);
-            tvLike.setOnClickListener(this);
+            imgLike.setOnClickListener(this);
         }
 
         void bindLayout(final Items item) {
             Picasso.with(mContext).load(item.getAvatarUrl()).into(img);
             tvLogin.setText(item.getLogin());
-            makeDrawable(R.drawable.thumb_up_like);
-        }
-
-        private void makeDrawable(int drawableValue) {
-            drawable = ContextCompat.getDrawable(mContext, drawableValue);
-            drawable.setBounds(0, 0, 40, 40);
-            tvLike.setCompoundDrawables(null, null, drawable, null);
+            imgLike.setSelected(true);
         }
 
         @Override
         public void onClick(View v) {
-            if (mGithubList.get(getAdapterPosition()).getLike()) {
-                mGithubList.get(getAdapterPosition()).setLike(false);
-                mGithubList.remove(mGithubList.get(getAdapterPosition()));
-            }
+            mGithubList.get(getAdapterPosition()).setLike(false);
+            mInterface.onClick(mGithubList.get(getAdapterPosition()));
 
+            mGithubList.remove(mGithubList.get(getAdapterPosition()));
             notifyDataSetChanged();
         }
+    }
+
+    public interface LikeInterface {
+        public void onClick(Items item);
     }
 }

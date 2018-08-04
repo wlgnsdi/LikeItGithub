@@ -15,7 +15,7 @@ public class Github {
         return itemsList;
     }
 
-    public class Items {
+    public static class Items {
 
         @SerializedName("login")
         String login;
@@ -23,6 +23,14 @@ public class Github {
         String avatar_url;
         boolean like;
 
+        int id;
+
+        public int getId() {
+            return id;
+        }
+        public void setId(int serial) {
+            id = serial;
+        }
         public boolean getLike() {
             return like;
         }
@@ -48,7 +56,7 @@ public class Github {
         }
     }
 
-    private static ContentValues getContentValues(Items items) {
+    public static ContentValues getContentValues(Items items) {
         ContentValues values = new ContentValues();
         values.put(GithubTable.COLUMN_LOGIN, items.login);
         values.put(GithubTable.COLUMN_AVATAR_URL, items.avatar_url);
