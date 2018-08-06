@@ -1,9 +1,6 @@
 package com.ryu.dev.likeitgithub.view;
 
-import static com.ryu.dev.likeitgithub.view.search.GithubSearchFragment.githubList;
-
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,8 +20,10 @@ import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
 import com.ryu.dev.likeitgithub.common.PagePagerAdapter;
 import com.ryu.dev.likeitgithub.db.DatabaseHelper;
+import com.ryu.dev.likeitgithub.model.Github.Items;
 import com.ryu.dev.likeitgithub.view.search.GithubSearchFragment;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @BindView(R.id.tab_pager_title)
     TabLayout mTabLayout;
 
+    public static List<Items> githubList = new ArrayList<>();
+
     private PagePagerAdapter pagerAdapter;
     private int tabPosition = -1;
     private long backPressedTime = 0;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public static int NUM_PAGE = 0;
 
     public static DatabaseHelper sDatabaseHelper;
-    public static SQLiteDatabase sDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     if (!TextUtils.isEmpty(s.trim()) && textCheck(s.trim())) {
                         NUM_PAGE = 0;
                         githubList = new ArrayList<>();
-                        ((GithubSearchFragment) pagerAdapter.getFragment(0))
-                                .retrofitNetworking(s.trim());
+                        ((GithubSearchFragment) pagerAdapter.getFragment(0)).retrofitNetworking(s.trim());
 
                         View view = getCurrentFocus();
                         if (view != null) {

@@ -54,6 +54,11 @@ public class Github {
         public void setAvatalUrl(String url) {
             this.avatar_url = url;
         }
+
+        @Override
+        public String toString() {
+            return login + ", " + Boolean.toString(like) + ", " + avatar_url;
+        }
     }
 
     public static ContentValues getContentValues(Items items) {

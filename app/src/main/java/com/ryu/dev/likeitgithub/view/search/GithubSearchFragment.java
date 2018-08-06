@@ -1,6 +1,7 @@
 package com.ryu.dev.likeitgithub.view.search;
 
 import static com.ryu.dev.likeitgithub.view.MainActivity.NUM_PAGE;
+import static com.ryu.dev.likeitgithub.view.MainActivity.githubList;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
@@ -29,8 +29,6 @@ import com.ryu.dev.likeitgithub.network.RetrofitService;
 import com.ryu.dev.likeitgithub.view.MainActivity;
 import com.ryu.dev.likeitgithub.view.search.adapter.Adapter;
 import com.ryu.dev.likeitgithub.view.search.adapter.Adapter.SearchInterface;
-import java.util.ArrayList;
-import java.util.List;
 import retrofit2.Call;
 
 public class GithubSearchFragment extends Fragment implements SearchInterface{
@@ -45,7 +43,7 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
 
     private Adapter adapter;
 
-    public static List<Items> githubList = new ArrayList<>();
+
     private String searchStr;
     private EndlessRecyclerOnScrollListener scrollListener;
     private LinearLayoutManager linearLayoutManager;
@@ -80,6 +78,8 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
     public void onResume() {
         super.onResume();
         if (githubList.size() > 0) {
+            Log.d(TAG, "onResume: >>>>>");
+
             adapter.notifyDataSetChanged();
             mLayoutNoData.setVisibility(View.GONE);
         }
@@ -105,18 +105,21 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
     public void retrofitNetworking(String str) {
         searchStr = str;
         NUM_PAGE++;
+
         RetrofitService retrofitService = RetrofitService.retrofit.create(RetrofitService.class);
         final Call<Github> call = retrofitService.callUser(searchStr, NUM_PAGE, 30);
         NetworkCall networkCall = new NetworkCall(call, new NetworkInterface() {
             @Override
             public void resultNetwork() {
                 if (NUM_PAGE == 1) {
-                    Log.d(TAG, "resultNetwork : " + githubList.size());
                     adapter = new Adapter(getActivity(), githubList, GithubSearchFragment.this);
                     mRecyclerView.setAdapter(adapter);
                     initListener();
                     ((MainActivity) getActivity()).resumeFragment();
                 } else {
+                    Log.d(TAG, ">>> adapter.notifyDataSetChanged()");
+                    adapter.setGithubList(githubList);
+                    adapter.setTotalList();
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -144,6 +147,8 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
             Log.d(TAG, "onClick >> items : " + items.getLike());
             mHelper.add(items);
         }
-        else mHelper.delete(items);
+        else {
+            mHelper.delete(items);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.ryu.dev.likeitgithub.network;
 
-import static com.ryu.dev.likeitgithub.view.search.GithubSearchFragment.githubList;
+import static com.ryu.dev.likeitgithub.view.MainActivity.githubList;
 
 import com.ryu.dev.likeitgithub.model.Github;
 import com.ryu.dev.likeitgithub.model.Github.Items;
@@ -48,7 +48,7 @@ public class NetworkCall {
         Collections.sort(netWorkGithubLists, new Comparator<Items>() {
             @Override
             public int compare(Items o1, Items o2) {
-                return o1.getLogin().compareTo(o2.getLogin());
+                return o1.getLogin().toUpperCase().compareTo(o2.getLogin().toUpperCase());
             }
         });
 
@@ -64,10 +64,7 @@ public class NetworkCall {
     }
 
     public interface NetworkInterface {
-
         void resultNetwork();
-
         void noResult();
     }
-
 }

@@ -1,5 +1,7 @@
 package com.ryu.dev.likeitgithub.view.like;
 
+import static com.ryu.dev.likeitgithub.view.MainActivity.githubList;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -65,5 +67,11 @@ public class LikeFragment extends Fragment implements LikeInterface {
     @Override
     public void onClick(Items item) {
         mHelper.delete(item);
+        for (Items listItem : githubList) {
+            if (listItem.getLogin().equals(item.getLogin())) {
+                listItem.setLike(false);
+                break;
+            }
+        }
     }
 }
