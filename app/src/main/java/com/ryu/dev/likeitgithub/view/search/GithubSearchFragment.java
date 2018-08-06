@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ryu.dev.likeitgithub.R;
@@ -37,7 +39,9 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
     public static GithubSearchFragment searchFragment;
 
     @BindView(R.id.recyclerview_find)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
+    @BindView(R.id.layout_no_data)
+    LinearLayout mLayoutNoData;
 
     private Adapter adapter;
 
@@ -67,9 +71,8 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         return view;
     }
 
@@ -78,11 +81,15 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
         super.onResume();
         if (githubList.size() > 0) {
             adapter.notifyDataSetChanged();
+            mLayoutNoData.setVisibility(View.GONE);
+        }
+        else {
+            mLayoutNoData.setVisibility(View.VISIBLE);
         }
     }
 
     public void initListener() {
-        recyclerView.clearOnScrollListeners();
+        mRecyclerView.clearOnScrollListeners();
         scrollListener = new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore() {
@@ -91,7 +98,8 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
                 }
             }
         };
-        recyclerView.addOnScrollListener(scrollListener);
+
+        mRecyclerView.addOnScrollListener(scrollListener);
     }
 
     public void retrofitNetworking(String str) {
@@ -105,7 +113,7 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
                 if (NUM_PAGE == 1) {
                     Log.d(TAG, "resultNetwork : " + githubList.size());
                     adapter = new Adapter(getActivity(), githubList, GithubSearchFragment.this);
-                    recyclerView.setAdapter(adapter);
+                    mRecyclerView.setAdapter(adapter);
                     initListener();
                     ((MainActivity) getActivity()).resumeFragment();
                 } else {
@@ -122,6 +130,12 @@ public class GithubSearchFragment extends Fragment implements SearchInterface{
         });
 
         networkCall.proceed();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        githubList.clear();
     }
 
     @Override

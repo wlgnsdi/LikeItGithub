@@ -11,4 +11,5 @@
     <string name="exit">Press the Back button one more time to exit.</string>
     <string name="no_search">Retry</string>
     <string name="network_is_not_working">Network problem</string>
+    <string name="find">Find User</string>
 </resources>
